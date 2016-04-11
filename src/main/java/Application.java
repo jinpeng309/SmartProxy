@@ -7,6 +7,6 @@ import java.util.concurrent.ExecutionException;
  */
 public class Application {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new SmartProxyServer(80).start();
+        new SmartProxyServer(8888).start();
     }
 }
