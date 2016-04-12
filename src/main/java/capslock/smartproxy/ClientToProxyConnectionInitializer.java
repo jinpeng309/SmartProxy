@@ -21,7 +21,7 @@ public final class ClientToProxyConnectionInitializer extends ChannelInitializer
         pipeline.addLast(new IdleStateHandler(MAX_INACTIVE_TIME, MAX_INACTIVE_TIME, MAX_INACTIVE_TIME));
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpResponseEncoder());
-        pipeline.addLast(new HttpObjectAggregator(1024 * 8));
+        pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
         pipeline.addLast(new ClientHttpRequestHandler(session));
     }
 }

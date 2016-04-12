@@ -15,10 +15,17 @@ public final class ClientHttpRequestHandler extends SimpleChannelInboundHandler 
     }
 
     @Override
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+        System.out.println("exception in client " + cause);
+    }
+
+    @Override
     protected void messageReceived(final ChannelHandlerContext channelHandlerContext, final Object message)
             throws Exception {
         if (message instanceof FullHttpRequest) {
-            session.fireReceivedMessageFromClient(channelHandlerContext, (FullHttpRequest) message);
+            final FullHttpRequest request = (FullHttpRequest) message;
+            request.retain();
+            session.fireReceivedMessageFromClient(channelHandlerContext, request);
         }
     }
 }

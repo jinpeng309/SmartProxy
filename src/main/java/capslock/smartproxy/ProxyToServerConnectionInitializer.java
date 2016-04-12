@@ -1,5 +1,6 @@
 package capslock.smartproxy;
 
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -12,11 +13,14 @@ import io.netty.handler.timeout.IdleStateHandler;
  * Created by capslock.
  */
 public final class ProxyToServerConnectionInitializer extends ChannelInitializer<SocketChannel> {
-    private static final int MAX_INACTIVE_TIME = 300;
+    private static final int MAX_INACTIVE_TIME = 30000;
     private final ProxySession session;
+    private final ChannelHandlerContext clientConnectionContext;
 
-    public ProxyToServerConnectionInitializer(final ProxySession session) {
+    public ProxyToServerConnectionInitializer(final ProxySession session,
+            final ChannelHandlerContext clientConnectionContext) {
         this.session = session;
+        this.clientConnectionContext = clientConnectionContext;
     }
 
     @Override
@@ -25,6 +29,7 @@ public final class ProxyToServerConnectionInitializer extends ChannelInitializer
         pipeline.addLast(new IdleStateHandler(MAX_INACTIVE_TIME, MAX_INACTIVE_TIME, MAX_INACTIVE_TIME));
         pipeline.addLast(new HttpRequestEncoder());
         pipeline.addLast(new HttpResponseDecoder());
-        pipeline.addLast(new HttpObjectAggregator(1024 * 8));
+        pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
+        pipeline.addLast(new ServerHttpResponseHandler(session, clientConnectionContext));
     }
 }
