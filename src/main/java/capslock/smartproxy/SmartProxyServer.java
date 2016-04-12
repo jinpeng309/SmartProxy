@@ -27,8 +27,8 @@ public class SmartProxyServer {
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
         serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler(LogLevel.DEBUG))
-                .childHandler(new ClientToServerConnectionInitializer())
+                .handler(new LoggingHandler(LogLevel.INFO))
+                .childHandler(new ClientToProxyConnectionInitializer())
                 .bind(port).sync().get();
     }
 
